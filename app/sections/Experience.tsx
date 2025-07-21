@@ -98,7 +98,7 @@ export default function ExperienceSection() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeInOut", // <- valid value
+        ease: [0.6, -0.05, 0.01, 0.99] as [number, number, number, number],
       },
     },
   };

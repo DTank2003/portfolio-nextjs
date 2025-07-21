@@ -72,7 +72,7 @@ export default function AboutSection() {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: "easeInOut", // <- valid value
+        ease: [0.6, -0.05, 0.01, 0.99] as [number, number, number, number],
       },
     },
   };
@@ -84,7 +84,7 @@ export default function AboutSection() {
       scale: 1,
       transition: {
         duration: 0.6,
-        ease: "easeOut",
+        ease: [0, 0, 0.58, 1] as [number, number, number, number], // easeOut
       },
     },
   };
@@ -94,29 +94,6 @@ export default function AboutSection() {
     { number: "500+", label: "Users Impacted", icon: Users },
     { number: "95%", label: "Sprint Delivery", icon: Target },
     { number: "30%", label: "Performance Boost", icon: Zap },
-  ];
-
-  const skills = [
-    {
-      category: "Frontend",
-      items: ["React", "Next.js", "TypeScript", "Tailwind CSS"],
-      color: "from-cyan-500 to-blue-500",
-    },
-    {
-      category: "Backend",
-      items: ["Node.js", "Express", "Django", "REST APIs"],
-      color: "from-green-500 to-teal-500",
-    },
-    {
-      category: "Database",
-      items: ["MongoDB", "MySQL", "PostgreSQL", "Prisma"],
-      color: "from-purple-500 to-pink-500",
-    },
-    {
-      category: "Tools",
-      items: ["Git", "Docker", "Postman", "Figma"],
-      color: "from-orange-500 to-red-500",
-    },
   ];
 
   const interests = [

@@ -5,15 +5,20 @@ import { motion, useAnimation, useInView } from "framer-motion";
 import { Code2, Database, Zap, Terminal, Wrench, Layers } from "lucide-react";
 
 export default function SkillsSection() {
-  const [activeCategory, setActiveCategory] = useState("languages");
+  type SkillCategoryKey = keyof typeof skillCategories;
+
+  type SkillCategoryType = (typeof skillCategories)[SkillCategoryKey];
+
+  const [activeCategory, setActiveCategory] = useState<SkillCategoryKey>("languages");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const controls = useAnimation();
   // const ref = React.useRef(null);
   // const isInView = useInView(ref, { once: true, amount: 0.2 });
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
+  // Equivalent to: "languages" | "frameworks" | "databases" | "tools"
 
-  const [particles, setParticles] = useState<any []>([]);
+  const [particles, setParticles] = useState<any[]>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({
@@ -40,7 +45,7 @@ export default function SkillsSection() {
       window.addEventListener("mousemove", updateMousePosition);
       return () => window.removeEventListener("mousemove", updateMousePosition);
     }
-  }, []);
+  }, [mousePosition]);
 
   const skillCategories = {
     languages: {
@@ -123,18 +128,18 @@ export default function SkillsSection() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: "easeInOut", // <- valid value
+        ease: [0.6, -0.05, 0.01, 0.99] as [number, number, number, number],
       },
     },
   };
 
   const skillBarVariants = {
     hidden: { width: 0 },
-    visible: (level) => ({
+    visible: (level: number) => ({
       width: `${level}%`,
       transition: {
         duration: 1.5,
-        ease: "easeOut",
+        ease: [0, 0, 0.58, 1] as [number, number, number, number], // easeOut cubic-bezier
         delay: 0.5,
       },
     }),
@@ -220,7 +225,12 @@ export default function SkillsSection() {
           variants={itemVariants}
           className="flex flex-wrap justify-center gap-4 mb-12"
         >
-          {Object.entries(skillCategories).map(([key, category]) => {
+          {(
+            Object.entries(skillCategories) as [
+              SkillCategoryKey,
+              SkillCategoryType
+            ][]
+          ).map(([key, category]) => {
             const IconComponent = category.icon;
             return (
               <motion.button

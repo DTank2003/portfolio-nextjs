@@ -30,7 +30,7 @@ export default function HeroSection() {
       window.addEventListener("mousemove", updateMousePosition);
       return () => window.removeEventListener("mousemove", updateMousePosition);
     };
-  }, []);
+  }, [mousePosition]);
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -51,7 +51,7 @@ export default function HeroSection() {
       y: 0,
       transition: {
         duration: 0.8,
-        ease: "easeInOut", // <- valid value
+        ease: [0.6, -0.05, 0.01, 0.99] as [number, number, number, number],
       },
     },
   };
@@ -62,7 +62,7 @@ export default function HeroSection() {
       transition: {
         duration: 600,
         repeat: Infinity,
-        ease: "easeInOut",
+        ease: [0.42, 0, 0.58, 1] as [number, number, number, number], // "easeInOut" equivalent
       },
     },
   };
