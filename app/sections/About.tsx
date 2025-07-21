@@ -15,6 +15,7 @@ import {
   Camera,
   Globe,
 } from "lucide-react";
+import Particle from "./interface";
 
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState("story");
@@ -22,7 +23,7 @@ export default function AboutSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
-  const [particles, setParticles] = useState<any []>([]);
+  const [particles, setParticles] = useState<Particle []>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({

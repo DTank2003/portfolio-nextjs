@@ -3,6 +3,7 @@
 import React, { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
+import Particle from "./interface";
 
 export default function ContactSection() {
   const [isDownloading, setIsDownloading] = useState(false);
@@ -10,7 +11,7 @@ export default function ContactSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
-  const [particles, setParticles] = useState<any []>([]);
+  const [particles, setParticles] = useState<Particle []>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({

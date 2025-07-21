@@ -9,6 +9,7 @@ import {
   Check,
   ChevronDown,
 } from "lucide-react";
+import Particle from "./interface";
 
 export default function ExperienceSection() {
   const [activeExperience, setActiveExperience] = useState(0);
@@ -17,7 +18,7 @@ export default function ExperienceSection() {
   const isInView = useInView(ref, { once: true });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const [particles, setParticles] = useState<any []>([]);
+  const [particles, setParticles] = useState<Particle []>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({

@@ -3,6 +3,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import { Code2, Database, Zap, Terminal, Wrench, Layers } from "lucide-react";
+import Particle from "./interface";
 
 export default function SkillsSection() {
   type SkillCategoryKey = keyof typeof skillCategories;
@@ -18,7 +19,7 @@ export default function SkillsSection() {
   const isInView = useInView(ref, { once: true });
   // Equivalent to: "languages" | "frameworks" | "databases" | "tools"
 
-  const [particles, setParticles] = useState<any[]>([]);
+  const [particles, setParticles] = useState<Particle[]>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({
@@ -39,7 +40,7 @@ export default function SkillsSection() {
 
   useEffect(() => {
     if (mousePosition || !mousePosition) {
-      const updateMousePosition = (e) => {
+      const updateMousePosition = (e: {clientX: number, clientY: number}) => {
         setMousePosition({ x: e.clientX, y: e.clientY });
       };
       window.addEventListener("mousemove", updateMousePosition);

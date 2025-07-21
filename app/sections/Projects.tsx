@@ -17,6 +17,7 @@ import {
   Globe,
   ChevronDown,
 } from "lucide-react";
+import Particle from "./interface";
 
 export default function ProjectsSection() {
   const [activeProject, setActiveProject] = useState(0);
@@ -186,7 +187,7 @@ export default function ProjectsSection() {
     },
   };
 
-  const [particles, setParticles] = useState<any []>([]);
+  const [particles, setParticles] = useState<Particle []>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({

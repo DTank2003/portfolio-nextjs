@@ -3,13 +3,14 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useInView } from "framer-motion";
 import { MapPin, Code, Zap, Terminal } from "lucide-react";
+import Particle from "./interface";
 
 export default function HeroSection() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
-  const [particles, setParticles] = useState<any []>([]);
+  const [particles, setParticles] = useState<Particle []>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({
@@ -24,7 +25,7 @@ export default function HeroSection() {
 
   useEffect(() => {
     if(mousePosition || !mousePosition) {
-      const updateMousePosition = (e) => {
+      const updateMousePosition = (e: {clientX: number, clientY: number}) => {
         setMousePosition({ x: e.clientX, y: e.clientY });
       }
       window.addEventListener("mousemove", updateMousePosition);

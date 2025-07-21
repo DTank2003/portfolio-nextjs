@@ -17,14 +17,14 @@ export default function HeaderSection() {
 
   const headerVariants = {
     hidden: { opacity: 0, y: -50 },
-    visible: { 
-      opacity: 1, 
+    visible: {
+      opacity: 1,
       y: 0,
       transition: {
         duration: 0.8,
-        ease: "easeOut"
-      }
-    }
+        ease: [0.42, 0, 0.58, 1] as [number, number, number, number], // ✅ equivalent to easeInOut
+      },
+    },
   };
 
   const navItemVariants = {
@@ -32,7 +32,7 @@ export default function HeaderSection() {
       scale: 1.1,
       y: -2,
       transition: { 
-        type: "spring", 
+        type: "spring" as const, 
         stiffness: 300,
         damping: 20
       }
@@ -52,7 +52,7 @@ export default function HeaderSection() {
       scale: 1,
       transition: {
         duration: 0.3,
-        ease: "easeOut",
+        ease: [0.25, 0.1, 0.25, 1] as [number, number, number, number], // equivalent to easeOut
         staggerChildren: 0.1
       }
     }
@@ -74,7 +74,7 @@ export default function HeaderSection() {
 
   const lineVariants = {
     closed: { rotate: 0, y: 0 },
-    open: (custom) => ({
+    open: (custom: {rotate: number, y: number}) => ({
       rotate: custom.rotate,
       y: custom.y,
       transition: { duration: 0.3 }
@@ -180,7 +180,7 @@ export default function HeaderSection() {
             className="md:hidden absolute top-full left-0 right-0 backdrop-blur-xl bg-black/90 border-b border-gray-700/50 shadow-2xl"
           >
             <nav className="max-w-7xl mx-auto px-4 py-6 space-y-4">
-              {navItems.map((item, index) => (
+              {navItems.map((item) => (
                 <motion.a
                   key={item}
                   href={`#${item.toLowerCase()}`}
