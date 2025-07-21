@@ -1,16 +1,26 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
-import {
-  MapPin,
-  Code,
-  Zap,
-  Terminal,
-} from "lucide-react";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useAnimation, useInView } from "framer-motion";
+import { MapPin, Code, Zap, Terminal } from "lucide-react";
 
 export default function HeroSection() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const newParticles = [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }));
+    setParticles(newParticles);
+  }, []);
 
   useEffect(() => {
     const updateMousePosition = (e) => {
@@ -26,6 +36,7 @@ export default function HeroSection() {
     visible: {
       opacity: 1,
       transition: {
+        duration: 0.6,
         staggerChildren: 0.3,
         delayChildren: 0.2,
       },
@@ -65,7 +76,14 @@ export default function HeroSection() {
   ];
 
   return (
-    <section id="hero" className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden">
+    <motion.section
+      id="hero"
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden"
+    >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute -top-40 -right-40 w-80 h-80 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
@@ -73,8 +91,31 @@ export default function HeroSection() {
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-2000"></div>
       </div>
 
+      {/* Floating Particles */}
+      <div className="absolute inset-0">
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30"
+            style={{
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              delay: particle.delay,
+            }}
+          />
+        ))}
+      </div>
+
       {/* Mouse Follower */}
-      <motion.div
+      {/* <motion.div
         className="fixed w-6 h-6 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full pointer-events-none z-50 mix-blend-difference"
         animate={{
           x: mousePosition.x - 12,
@@ -85,7 +126,7 @@ export default function HeroSection() {
           stiffness: 500,
           damping: 28,
         }}
-      />
+      /> */}
 
       {/* Main Content */}
       <motion.div
@@ -107,7 +148,7 @@ export default function HeroSection() {
               >
                 <MapPin className="w-4 h-4" />
                 <span className="text-sm lg:text-base">
-                  Jamnagar, Gujarat, India
+                  Ahmedabad, Gujarat, India
                 </span>
               </motion.div>
 
@@ -151,7 +192,7 @@ export default function HeroSection() {
             </motion.p>
 
             {/* Tech Stack */}
-            <motion.div variants={itemVariants} className="space-y-4">
+            <motion.div variants={itemVariants} className="space-y-6 mb-16">
               <h3 className="text-sm font-semibold text-gray-400 uppercase tracking-wider">
                 Tech Stack
               </h3>
@@ -248,6 +289,6 @@ export default function HeroSection() {
           </div>
         </div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }

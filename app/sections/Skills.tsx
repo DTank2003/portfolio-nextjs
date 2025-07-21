@@ -1,26 +1,30 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import {
-  Code2,
-  Database,
-  Server,
-  Globe,
-  Smartphone,
-  Zap,
-  Terminal,
-  GitBranch,
-  Wrench,
-  Layers,
-} from "lucide-react";
+import { Code2, Database, Zap, Terminal, Wrench, Layers } from "lucide-react";
 
 export default function SkillsSection() {
   const [activeCategory, setActiveCategory] = useState("languages");
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const controls = useAnimation();
-  const ref = React.useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  // const ref = React.useRef(null);
+  // const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const newParticles = [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }));
+    setParticles(newParticles);
+  }, []);
 
   useEffect(() => {
     if (isInView) {
@@ -79,7 +83,7 @@ export default function SkillsSection() {
         { name: "MySQL", level: 85, icon: "🐬", color: "text-blue-400" },
         { name: "PostgreSQL", level: 80, icon: "🐘", color: "text-blue-500" },
         { name: "SQLite", level: 75, icon: "💾", color: "text-gray-400" },
-        { name: "Prisma", level: 85, icon: "⚡", color: "text-indigo-400" },
+        { name: "Prisma ORM", level: 85, icon: "⚡", color: "text-indigo-400" },
       ],
     },
     tools: {
@@ -104,7 +108,7 @@ export default function SkillsSection() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
+        duration: 0.6,
         staggerChildren: 0.2,
         delayChildren: 0.3,
       },
@@ -136,7 +140,14 @@ export default function SkillsSection() {
   };
 
   return (
-    <section id="skills" className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden py-20">
+    <motion.section
+      id="skills"
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden py-20"
+    >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
@@ -146,22 +157,22 @@ export default function SkillsSection() {
 
       {/* Floating Particles */}
       <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle) => (
           <motion.div
-            key={i}
+            key={particle.id}
             className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
             }}
             animate={{
               y: [0, -100, 0],
               opacity: [0.3, 0.8, 0.3],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: particle.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: particle.delay,
             }}
           />
         ))}
@@ -191,7 +202,7 @@ export default function SkillsSection() {
             whileHover={{ scale: 1.05 }}
           >
             <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
-              Skills & Technologies
+              Technical Skills
             </span>
           </motion.h2>
           {/* </span> */}
@@ -321,7 +332,7 @@ export default function SkillsSection() {
 
               {/* Skills Visualization */}
               <div className="relative z-10 h-full flex items-center justify-center">
-                <div className="grid grid-cols-3 gap-4 w-full max-w-xs">
+                <div className="grid grid-cols-3 gap-4 w-full">
                   {skillCategories[activeCategory].skills
                     .slice(0, 6)
                     .map((skill, index) => (
@@ -333,7 +344,7 @@ export default function SkillsSection() {
                         className="group relative"
                       >
                         <motion.div
-                          className="w-16 h-16 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700 flex items-center justify-center text-2xl group-hover:border-cyan-400 transition-all duration-300"
+                          className="w-26 h-26 rounded-xl bg-gray-800/80 backdrop-blur-sm border border-gray-700 flex items-center justify-center text-2xl group-hover:border-cyan-400 transition-all duration-300"
                           whileHover={{ scale: 1.1, y: -5 }}
                           animate={{
                             y: [0, -5, 0],
@@ -349,7 +360,7 @@ export default function SkillsSection() {
 
                         {/* Skill Level Indicator */}
                         <motion.div
-                          className="absolute -bottom-1 -right-1 w-6 h-6 rounded-full bg-gradient-to-r from-cyan-400 to-purple-500 flex items-center justify-center text-xs font-bold text-white"
+                          className={`absolute -bottom-1 w-8 h-8 rounded-full  bg-gradient-to-r ${skillCategories[activeCategory].color} flex items-center justify-center text-xs font-bold text-white`}
                           initial={{ scale: 0 }}
                           animate={{ scale: 1 }}
                           transition={{ delay: index * 0.1 + 0.5 }}
@@ -409,6 +420,6 @@ export default function SkillsSection() {
           ))}
         </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }

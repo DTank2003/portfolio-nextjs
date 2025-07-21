@@ -1,3 +1,4 @@
+import CustomCursor from "./components/CustomCursor";
 import AboutSection from "./sections/About";
 import ContactSection  from "./sections/Contact";
 import ExperienceSection from "./sections/Experience";
@@ -13,8 +14,8 @@ export default function Home() {
       <HeroSection />
       <AboutSection />
       <SkillsSection />
-      <ProjectsSection />
       <ExperienceSection />
+      <ProjectsSection />
       <ContactSection />
     </>
   );

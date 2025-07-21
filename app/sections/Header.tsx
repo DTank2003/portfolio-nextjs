@@ -13,7 +13,7 @@ export default function HeaderSection() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const navItems = ['About', 'Skills', 'Projects', 'Experience', 'Contact'];
+  const navItems = ['About', 'Skills', 'Experience', 'Projects', 'Contact'];
 
   const headerVariants = {
     hidden: { opacity: 0, y: -50 },

@@ -1,12 +1,27 @@
 "use client";
 
-import React, { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useRef, useState } from "react";
+import { motion, AnimatePresence, useInView } from "framer-motion";
 import { Github, Linkedin, Mail } from "lucide-react";
 
 export default function ContactSection() {
   const [isDownloading, setIsDownloading] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const newParticles = [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }));
+    setParticles(newParticles);
+  }, []);
 
   const itemVariants = {
     hidden: { opacity: 0, y: 50 },
@@ -35,6 +50,19 @@ export default function ContactSection() {
     }, 1500);
   };
 
+  const containerVariants = {
+    hidden: { opacity: 0, y: 50 },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.6,
+        staggerChildren: 0.2,
+        delayChildren: 0.3,
+      },
+    },
+  };
+
   // Confetti particles
   const confettiColors = [
     "#00bcd4",
@@ -58,38 +86,44 @@ export default function ContactSection() {
   }));
 
   return (
-    <section id="contact" className="relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center p-8 ">
+    <motion.section
+      id="contact"
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+      className="relative min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 flex items-center justify-center p-8 "
+    >
       {/* relative overflow-hidden py-20"" */}
       {/* Animated Background Elements */}
-           <div className="absolute inset-0 overflow-hidden">
-             <div className="absolute top-20 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
-             <div className="absolute bottom-20 left-20 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-1000"></div>
-             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-5 animate-pulse delay-2000"></div>
-           </div>
-     
-           {/* Floating Particles */}
-           <div className="absolute inset-0">
-             {[...Array(20)].map((_, i) => (
-               <motion.div
-                 key={i}
-                 className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30"
-                 style={{
-                   left: `${Math.random() * 100}%`,
-                   top: `${Math.random() * 100}%`,
-                 }}
-                 animate={{
-                   y: [0, -100, 0],
-                   opacity: [0.3, 0.8, 0.3],
-                 }}
-                 transition={{
-                   duration: 3 + Math.random() * 2,
-                   repeat: Infinity,
-                   delay: Math.random() * 2,
-                 }}
-               />
-             ))}
-           </div>
-     
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="absolute top-20 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
+        <div className="absolute bottom-20 left-20 w-96 h-96 bg-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse delay-1000"></div>
+        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-5 animate-pulse delay-2000"></div>
+      </div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0">
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30"
+            style={{
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              delay: particle.delay,
+            }}
+          />
+        ))}
+      </div>
 
       <div className="relative z-10 max-w-4xl w-full">
         {/* Hero Section */}
@@ -123,7 +157,7 @@ export default function ContactSection() {
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
           >
-            View My Work
+            Let’s stay connected!
           </motion.button>
 
           <motion.a
@@ -235,42 +269,48 @@ export default function ContactSection() {
               animate={{ scaleX: 1 }}
               transition={{ delay: 0.8, duration: 0.8 }}
             />
-            
+
             {/* Social links text */}
             <motion.p
               className="text-sm text-gray-400 mb-4 font-medium"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 1 }}
-            >
-              Connect with me
-            </motion.p>
-            
+            ></motion.p>
+
             {/* Social buttons */}
             <div className="flex space-x-6">
               {[
-              { icon: Github, href: "https://github.com/dtank2003", label: "GitHub" },
-              { icon: Linkedin, href: "https://in.linkedin.com/in/dhyey-tank", label: "LinkedIn" },
-              {
-                icon: Mail,
-                href: "mailto:dhyey.tank098@gmail.com",
-                label: "Email",
-              },
+                {
+                  icon: Github,
+                  href: "https://github.com/dtank2003",
+                  label: "GitHub",
+                },
+                {
+                  icon: Linkedin,
+                  href: "https://in.linkedin.com/in/dhyey-tank",
+                  label: "LinkedIn",
+                },
+                {
+                  icon: Mail,
+                  href: "mailto:dhyey.tank098@gmail.com",
+                  label: "Email",
+                },
               ].map((social, index) => (
-              <motion.a
-                key={social.label}
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group relative w-14 h-14 rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-cyan-400 transition-all duration-300 hover:bg-gray-700/50"
-                whileHover={{ scale: 1.1, y: -2 }}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 1.1 + index * 0.1 }}
-              >
-                <social.icon className="w-6 h-6 transition-all duration-300 group-hover:scale-110" />
-                
-                {/* Tooltip */}
+                <motion.a
+                  key={social.label}
+                  href={social.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="group relative w-14 h-14 rounded-xl bg-gray-800/50 backdrop-blur-sm border border-gray-700 flex items-center justify-center text-gray-400 hover:text-white hover:border-cyan-400 transition-all duration-300 hover:bg-gray-700/50"
+                  whileHover={{ scale: 1.1, y: -2 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 1.1 + index * 0.1 }}
+                >
+                  <social.icon className="w-6 h-6 transition-all duration-300 group-hover:scale-110" />
+
+                  {/* Tooltip */}
                   <motion.div
                     className="absolute -top-10 left-1/2 transform -translate-x-1/2 px-2 py-1 bg-gray-800 text-white text-xs rounded opacity-0 group-hover:opacity-100 transition-opacity duration-300 whitespace-nowrap"
                     initial={{ opacity: 0, y: 5 }}
@@ -278,7 +318,7 @@ export default function ContactSection() {
                   >
                     {social.label}
                   </motion.div>
-                  
+
                   {/* Glow effect */}
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-r from-cyan-400/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                 </motion.a>
@@ -376,6 +416,6 @@ export default function ContactSection() {
           )}
         </AnimatePresence>
       </div>
-    </section>
+    </motion.section>
   );
 }

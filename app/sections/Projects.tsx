@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import {
   ExternalLink,
@@ -17,14 +17,17 @@ import {
   Smartphone,
   Globe,
   Star,
+  ChevronDown,
 } from "lucide-react";
 
 export default function ProjectsSection() {
   const [activeProject, setActiveProject] = useState(0);
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const controls = useAnimation();
-  const ref = React.useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
-
+  // const ref = React.useRef(null);
+  // const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
   useEffect(() => {
     if (isInView) {
       controls.start("visible");
@@ -54,7 +57,7 @@ export default function ProjectsSection() {
         { icon: Shield, text: "Secure transactions" },
         { icon: Globe, text: "Multi-currency support" },
       ],
-      github: "#",
+      github: "https://github.com/DTank2003/Advanced-Finance-Manager",
       demo: "#",
       category: "Full-Stack",
       status: "Live",
@@ -81,7 +84,7 @@ export default function ProjectsSection() {
         { icon: CreditCard, text: "Payment integration" },
         { icon: Users, text: "Multi-user support" },
       ],
-      github: "#",
+      github: "https://github.com/DTank2003/EduVerse--E-Learning-Platform",
       demo: "#",
       category: "Full-Stack",
       status: "Live",
@@ -100,12 +103,64 @@ export default function ProjectsSection() {
         { icon: Code2, text: "Clean architecture" },
         { icon: Smartphone, text: "Mobile responsive" },
       ],
-      github: "#",
+      github: "https://github.com/DTank2003/Django-Blog_Application",
       demo: "#",
       category: "Full-Stack",
       status: "Live",
       gradient: "from-purple-400 to-pink-500",
     },
+    // {
+    //   id: 4,
+    //   title: "HealthTrack",
+    //   subtitle: "Fitness & Wellness App",
+    //   description:
+    //     "A comprehensive health tracking application with workout planning, nutrition logging, and health analytics. Includes AI-powered recommendations and progress tracking.",
+    //   technologies: [
+    //     "React Native",
+    //     "Firebase",
+    //     "Redux",
+    //     "Node.js",
+    //     "TensorFlow.js",
+    //     "Tailwind CSS",
+    //   ],
+    //   highlights: [
+    //     { icon: Star, text: "Personalized workouts" },
+    //     { icon: BarChart3, text: "Progress analytics" },
+    //     { icon: Users, text: "Community features" },
+    //     { icon: Smartphone, text: "Mobile-first design" },
+    //   ],
+    //   github: "#",
+    //   demo: "#",
+    //   category: "Mobile App",
+    //   status: "In Development",
+    //   gradient: "from-orange-400 to-red-500",
+    // },
+    // {
+    //   id: 5,
+    //   title: "MarketInsight",
+    //   subtitle: "E-commerce Analytics",
+    //   description:
+    //     "Advanced analytics platform for e-commerce businesses providing sales insights, customer behavior analysis, and inventory optimization recommendations.",
+    //   technologies: [
+    //     "Next.js",
+    //     "TypeScript",
+    //     "PostgreSQL",
+    //     "D3.js",
+    //     "Redis",
+    //     "Tailwind CSS",
+    //   ],
+    //   highlights: [
+    //     { icon: BarChart3, text: "Sales analytics" },
+    //     { icon: Users, text: "Customer segmentation" },
+    //     { icon: TrendingUp, text: "Trend forecasting" },
+    //     { icon: CreditCard, text: "Revenue optimization" },
+    //   ],
+    //   github: "#",
+    //   demo: "#",
+    //   category: "Analytics",
+    //   status: "Live",
+    //   gradient: "from-indigo-400 to-violet-500",
+    // },
   ];
 
   const containerVariants = {
@@ -114,7 +169,7 @@ export default function ProjectsSection() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
+        duration: 0.6,
         staggerChildren: 0.2,
         delayChildren: 0.3,
       },
@@ -145,10 +200,31 @@ export default function ProjectsSection() {
     },
   };
 
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const newParticles = [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }));
+    setParticles(newParticles);
+  }, []);
+
   return (
-    <section
+    // <section
+    //   id="projects"
+    //   className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden py-20"
+    // >
+    <motion.section
       id="projects"
-      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden py-20"
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
+      className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden pt-20 lg:pb-20 md:pb-10 sm:pb-10"
     >
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
@@ -159,22 +235,22 @@ export default function ProjectsSection() {
 
       {/* Floating Particles */}
       <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle) => (
           <motion.div
-            key={i}
+            key={particle.id}
             className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
             }}
             animate={{
               y: [0, -100, 0],
               opacity: [0.3, 0.8, 0.3],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: particle.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: particle.delay,
             }}
           />
         ))}
@@ -215,14 +291,15 @@ export default function ProjectsSection() {
         {/* Project Navigation */}
         <motion.div
           variants={itemVariants}
-          className="flex justify-center mb-12"
+          className="flex justify-center mb-12 relative"
         >
-          <div className="flex space-x-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-2">
+          {/* Desktop: Horizontal buttons */}
+          <div className="hidden md:flex sm:flex space-x-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-2 overflow-x-auto max-w-full">
             {projects.map((project, index) => (
               <motion.button
                 key={project.id}
                 onClick={() => setActiveProject(index)}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                className={`px-4 py-2 md:px-6 md:py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap ${
                   activeProject === index
                     ? "bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-lg"
                     : "text-gray-400 hover:text-white hover:bg-gray-700/50"
@@ -233,6 +310,64 @@ export default function ProjectsSection() {
                 {project.title}
               </motion.button>
             ))}
+          </div>
+
+          {/* Mobile: Dropdown menu */}
+          <div className="md:hidden w-full max-w-xs mx-auto">
+            <motion.button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`w-full flex justify-between items-center px-6 py-4 rounded-xl font-medium transition-all duration-300 ${
+                isMobileMenuOpen
+                  ? "bg-gray-800 border border-gray-700 rounded-b-none"
+                  : "bg-gray-800/50 backdrop-blur-sm border border-gray-700"
+              }`}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="truncate pr-2">
+                {projects[activeProject].title}
+              </span>
+              <motion.div
+                animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown size={20} />
+              </motion.div>
+            </motion.button>
+
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute z-20 w-full max-w-xs bg-gray-800 border border-gray-700 border-t-0 rounded-b-xl overflow-hidden"
+              >
+                <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                  {projects.map((project, index) => (
+                    <motion.button
+                      key={project.id}
+                      onClick={() => {
+                        setActiveProject(index);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`w-full text-left px-6 py-3 font-medium transition-colors duration-200 ${
+                        activeProject === index
+                          ? "bg-gradient-to-r from-cyan-500/20 to-purple-600/20 text-cyan-400"
+                          : "text-gray-400 hover:text-white hover:bg-gray-700/50"
+                      }`}
+                      whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.5)" }}
+                    >
+                      <div className="flex items-center">
+                        <span className="truncate">{project.title}</span>
+                        {activeProject === index && (
+                          <div className="ml-2 w-2 h-2 bg-cyan-500 rounded-full"></div>
+                        )}
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
 
@@ -250,7 +385,7 @@ export default function ProjectsSection() {
             className="space-y-6"
           >
             <div className="space-y-4">
-              <div className="flex items-center space-x-4">
+              <div className="flex flex-wrap gap-2">
                 <motion.div
                   className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${projects[activeProject].gradient} text-white`}
                   whileHover={{ scale: 1.05 }}
@@ -278,7 +413,7 @@ export default function ProjectsSection() {
             </div>
 
             {/* Highlights */}
-            <div className="grid grid-cols-2 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {projects[activeProject].highlights.map((highlight, index) => (
                 <motion.div
                   key={`highlight-${activeProject}-${index}`}
@@ -287,7 +422,7 @@ export default function ProjectsSection() {
                   transition={{ delay: index * 0.1 }}
                   className="flex items-center space-x-3 p-3 rounded-lg bg-gray-800/50 backdrop-blur-sm border border-gray-700"
                 >
-                  <highlight.icon className="w-5 h-5 text-cyan-400" />
+                  <highlight.icon className="w-5 h-5 text-cyan-400 flex-shrink-0" />
                   <span className="text-sm text-gray-300">
                     {highlight.text}
                   </span>
@@ -315,19 +450,11 @@ export default function ProjectsSection() {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex space-x-4">
-              {/* <motion.a
-                href={projects[activeProject].demo}
-                className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-lg text-white font-semibold hover:from-cyan-600 hover:to-purple-700 transition-all duration-300 shadow-lg hover:shadow-xl"
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Play className="w-5 h-5" />
-                <span>Live Demo</span>
-              </motion.a> */}
-
+            <div className="flex flex-wrap gap-4">
               <motion.a
                 href={projects[activeProject].github}
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center space-x-2 px-6 py-3 border-2 border-gray-600 rounded-lg text-gray-300 font-semibold hover:border-cyan-400 hover:text-cyan-400 transition-all duration-300"
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
@@ -344,7 +471,7 @@ export default function ProjectsSection() {
             initial={{ opacity: 0, x: 50 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ duration: 0.6 }}
-            className="relative hidden lg:block"
+            className="lg:relative hidden lg:block"
           >
             <div className="relative group">
               {/* Main Project Image */}
@@ -356,8 +483,8 @@ export default function ProjectsSection() {
                 <div
                   className={`aspect-video bg-gradient-to-br ${projects[activeProject].gradient} flex items-center justify-center`}
                 >
-                  <div className="text-white text-center">
-                    <div className="text-4xl font-bold mb-2">
+                  <div className="text-white text-center px-4">
+                    <div className="text-3xl sm:text-4xl font-bold mb-2">
                       {projects[activeProject].title}
                     </div>
                     <div className="text-lg opacity-80">
@@ -385,15 +512,8 @@ export default function ProjectsSection() {
                         transition={{ delay: 0.2 }}
                       >
                         <motion.a
-                          href={projects[activeProject].demo}
-                          className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300"
-                          whileHover={{ scale: 1.1 }}
-                          whileTap={{ scale: 0.9 }}
-                        >
-                          <ExternalLink className="w-4 h-4 text-white" />
-                        </motion.a>
-                        <motion.a
                           href={projects[activeProject].github}
+                          target="_blank"
                           className="p-2 rounded-full bg-white/20 backdrop-blur-sm hover:bg-white/30 transition-all duration-300"
                           whileHover={{ scale: 1.1 }}
                           whileTap={{ scale: 0.9 }}
@@ -408,7 +528,75 @@ export default function ProjectsSection() {
             </div>
           </motion.div>
         </motion.div>
+
+        {/* Mobile Project Cards */}
+        {/* <motion.div
+          variants={itemVariants}
+          className="grid grid-cols-1 gap-6 md:hidden"
+        >
+          {projects.map((project, index) => (
+            <motion.div
+              key={project.id}
+              variants={cardVariants}
+              className="bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-2xl overflow-hidden"
+            >
+              <div
+                className={`h-32 bg-gradient-to-r ${project.gradient} p-4 flex flex-col justify-between`}
+              >
+                <div className="flex justify-between items-start">
+                  <h3 className="text-xl font-bold text-white">{project.title}</h3>
+                  <div className="flex space-x-2">
+                    <div className="px-2 py-1 text-xs font-semibold bg-black/30 rounded-full text-white">
+                      {project.category}
+                    </div>
+                  </div>
+                </div>
+                <p className="text-white/90">{project.subtitle}</p>
+              </div>
+              <div className="p-4">
+                <p className="text-gray-300 mb-4">{project.description}</p>
+                <div className="flex justify-between items-center">
+                  <a
+                    href={project.github}
+                    target="_blank"
+                    className="text-cyan-400 hover:text-cyan-300 flex items-center"
+                  >
+                    <Github className="w-4 h-4 mr-1" />
+                    <span>View Code</span>
+                  </a>
+                  <button
+                    onClick={() => setActiveProject(index)}
+                    className={`px-3 py-1 rounded-full text-xs font-medium ${
+                      activeProject === index
+                        ? "bg-cyan-500 text-white"
+                        : "bg-gray-700 text-gray-300"
+                    }`}
+                  >
+                    {activeProject === index ? "Viewing" : "View"}
+                  </button>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </motion.div> */}
       </motion.div>
-    </section>
+
+      {/* Custom scrollbar styles */}
+      <style jsx global>{`
+        .custom-scrollbar::-webkit-scrollbar {
+          width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+          background: rgba(31, 41, 55, 0.5);
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+          background: rgba(56, 189, 248, 0.5);
+          border-radius: 3px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+          background: rgba(56, 189, 248, 0.8);
+        }
+      `}</style>
+    </motion.section>
   );
 }

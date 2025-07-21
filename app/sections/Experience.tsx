@@ -2,13 +2,33 @@
 
 import React, { useState, useEffect } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
-import { Briefcase, Calendar, Building, Check } from "lucide-react";
+import {
+  Briefcase,
+  Calendar,
+  Building,
+  Check,
+  ChevronDown,
+} from "lucide-react";
 
 export default function ExperienceSection() {
   const [activeExperience, setActiveExperience] = useState(0);
   const controls = useAnimation();
   const ref = React.useRef(null);
-  const isInView = useInView(ref, { once: true, amount: 0.2 });
+  const isInView = useInView(ref, { once: true });
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const newParticles = [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }));
+    setParticles(newParticles);
+  }, []);
 
   useEffect(() => {
     if (isInView) {
@@ -64,7 +84,7 @@ export default function ExperienceSection() {
       opacity: 1,
       y: 0,
       transition: {
-        duration: 0.8,
+        duration: 0.6,
         staggerChildren: 0.2,
         delayChildren: 0.3,
       },
@@ -84,10 +104,16 @@ export default function ExperienceSection() {
   };
 
   return (
-    <section
+    <motion.section
       id="experience"
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
       className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden py-20"
     >
+      {/* Your content here */}
+
       {/* Animated Background Elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 right-20 w-96 h-96 bg-purple-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
@@ -97,22 +123,22 @@ export default function ExperienceSection() {
 
       {/* Floating Particles */}
       <div className="absolute inset-0">
-        {[...Array(20)].map((_, i) => (
+        {particles.map((particle) => (
           <motion.div
-            key={i}
+            key={particle.id}
             className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30"
             style={{
-              left: `${Math.random() * 100}%`,
-              top: `${Math.random() * 100}%`,
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
             }}
             animate={{
               y: [0, -100, 0],
               opacity: [0.3, 0.8, 0.3],
             }}
             transition={{
-              duration: 3 + Math.random() * 2,
+              duration: particle.duration,
               repeat: Infinity,
-              delay: Math.random() * 2,
+              delay: particle.delay,
             }}
           />
         ))}
@@ -153,14 +179,14 @@ export default function ExperienceSection() {
         {/* Experience Navigation */}
         <motion.div
           variants={itemVariants}
-          className="flex justify-center mb-12"
+          className="flex justify-center mb-12 relative"
         >
-          <div className="flex space-x-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-2">
+          <div className="hidden md:flex space-x-2 bg-gray-800/50 backdrop-blur-sm border border-gray-700 rounded-xl p-2 overflow-x-auto max-w-full">
             {experiences.map((experience, index) => (
               <motion.button
                 key={experience.id}
                 onClick={() => setActiveExperience(index)}
-                className={`px-6 py-3 rounded-lg font-medium transition-all duration-300 ${
+                className={`px-4 py-2 md:px-6 md:py-3 rounded-lg font-medium transition-all duration-300 whitespace-nowrap ${
                   activeExperience === index
                     ? "bg-gradient-to-r from-cyan-500 to-purple-600 text-white shadow-lg"
                     : "text-gray-400 hover:text-white hover:bg-gray-700/50"
@@ -171,6 +197,64 @@ export default function ExperienceSection() {
                 {experience.company}
               </motion.button>
             ))}
+          </div>
+
+          {/* Mobile: Dropdown menu */}
+          <div className="md:hidden w-full max-w-xs mx-auto">
+            <motion.button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className={`w-full flex justify-between items-center px-6 py-4 rounded-xl font-medium transition-all duration-300 ${
+                isMobileMenuOpen
+                  ? "bg-gray-800 border border-gray-700 rounded-b-none"
+                  : "bg-gray-800/50 backdrop-blur-sm border border-gray-700"
+              }`}
+              whileTap={{ scale: 0.98 }}
+            >
+              <span className="truncate pr-2">
+                {experiences[activeExperience].company}
+              </span>
+              <motion.div
+                animate={{ rotate: isMobileMenuOpen ? 180 : 0 }}
+                transition={{ duration: 0.3 }}
+              >
+                <ChevronDown size={20} />
+              </motion.div>
+            </motion.button>
+
+            {isMobileMenuOpen && (
+              <motion.div
+                initial={{ opacity: 0, height: 0 }}
+                animate={{ opacity: 1, height: "auto" }}
+                exit={{ opacity: 0, height: 0 }}
+                transition={{ duration: 0.3 }}
+                className="absolute z-20 w-full max-w-xs bg-gray-800 border border-gray-700 border-t-0 rounded-b-xl overflow-hidden"
+              >
+                <div className="max-h-60 overflow-y-auto custom-scrollbar">
+                  {experiences.map((experience, index) => (
+                    <motion.button
+                      key={experience.id}
+                      onClick={() => {
+                        setActiveExperience(index);
+                        setIsMobileMenuOpen(false);
+                      }}
+                      className={`w-full text-left px-6 py-3 font-medium transition-colors duration-200 ${
+                        activeExperience === index
+                          ? "bg-gradient-to-r from-cyan-500/20 to-purple-600/20 text-cyan-400"
+                          : "text-gray-400 hover:text-white hover:bg-gray-700/50"
+                      }`}
+                      whileHover={{ backgroundColor: "rgba(55, 65, 81, 0.5)" }}
+                    >
+                      <div className="flex items-center">
+                        <span className="truncate">{experience.company}</span>
+                        {activeExperience === index && (
+                          <div className="ml-2 w-2 h-2 bg-cyan-500 rounded-full"></div>
+                        )}
+                      </div>
+                    </motion.button>
+                  ))}
+                </div>
+              </motion.div>
+            )}
           </div>
         </motion.div>
 
@@ -322,6 +406,6 @@ export default function ExperienceSection() {
           </motion.div>
         </motion.div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }

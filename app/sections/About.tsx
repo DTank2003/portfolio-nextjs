@@ -1,9 +1,8 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, useAnimation } from "framer-motion";
+import React, { useState, useEffect, useRef } from "react";
+import { motion, useInView } from "framer-motion";
 import {
-  Code2,
   Rocket,
   Users,
   Target,
@@ -20,6 +19,21 @@ import {
 export default function AboutSection() {
   const [activeTab, setActiveTab] = useState("story");
   const [isVisible, setIsVisible] = useState(false);
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true });
+
+  const [particles, setParticles] = useState([]);
+
+  useEffect(() => {
+    const newParticles = [...Array(20)].map((_, i) => ({
+      id: i,
+      left: Math.random() * 100,
+      top: Math.random() * 100,
+      duration: 3 + Math.random() * 2,
+      delay: Math.random() * 2,
+    }));
+    setParticles(newParticles);
+  }, []);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -44,6 +58,7 @@ export default function AboutSection() {
     visible: {
       opacity: 1,
       transition: {
+        duration: 0.6,
         staggerChildren: 0.2,
         delayChildren: 0.3,
       },
@@ -129,8 +144,12 @@ export default function AboutSection() {
   ];
 
   return (
-    <section
+    <motion.section
       id="about"
+      ref={ref}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+      variants={containerVariants}
       className="min-h-screen bg-gradient-to-br from-gray-900 via-black to-gray-800 text-white relative overflow-hidden py-20"
     >
       {/* Background Elements */}
@@ -138,6 +157,29 @@ export default function AboutSection() {
         <div className="absolute top-20 left-10 w-64 h-64 bg-gradient-to-r from-cyan-500/10 to-purple-500/10 rounded-full filter blur-3xl"></div>
         <div className="absolute bottom-20 right-10 w-80 h-80 bg-gradient-to-r from-pink-500/10 to-yellow-500/10 rounded-full filter blur-3xl"></div>
         <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-gradient-to-r from-purple-500/5 to-cyan-500/5 rounded-full filter blur-3xl"></div>
+      </div>
+
+      {/* Floating Particles */}
+      <div className="absolute inset-0">
+        {particles.map((particle) => (
+          <motion.div
+            key={particle.id}
+            className="absolute w-1 h-1 bg-cyan-400 rounded-full opacity-30"
+            style={{
+              left: `${particle.left}%`,
+              top: `${particle.top}%`,
+            }}
+            animate={{
+              y: [0, -100, 0],
+              opacity: [0.3, 0.8, 0.3],
+            }}
+            transition={{
+              duration: particle.duration,
+              repeat: Infinity,
+              delay: particle.delay,
+            }}
+          />
+        ))}
       </div>
 
       <motion.div
@@ -474,6 +516,6 @@ export default function AboutSection() {
           </motion.div>
         </div>
       </motion.div>
-    </section>
+    </motion.section>
   );
 }
