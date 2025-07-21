@@ -186,7 +186,7 @@ export default function ProjectsSection() {
     },
   };
 
-  const [particles, setParticles] = useState([]);
+  const [particles, setParticles] = useState<any []>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({

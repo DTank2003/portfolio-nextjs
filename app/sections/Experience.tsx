@@ -17,7 +17,7 @@ export default function ExperienceSection() {
   const isInView = useInView(ref, { once: true });
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  const [particles, setParticles] = useState([]);
+  const [particles, setParticles] = useState<any []>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({

@@ -9,7 +9,7 @@ export default function HeroSection() {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true });
 
-  const [particles, setParticles] = useState([]);
+  const [particles, setParticles] = useState<any []>([]);
 
   useEffect(() => {
     const newParticles = [...Array(20)].map((_, i) => ({
