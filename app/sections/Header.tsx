@@ -27,18 +27,6 @@ export default function HeaderSection() {
     }
   };
 
-  const logoVariants = {
-    hover: { 
-      scale: 1.1,
-      rotate: [0, -10, 10, -10, 0],
-      transition: { 
-        duration: 0.6,
-        rotate: { repeat: Infinity, repeatType: "reverse", duration: 0.3 }
-      }
-    },
-    tap: { scale: 0.95 }
-  };
-
   const navItemVariants = {
     hover: { 
       scale: 1.1,

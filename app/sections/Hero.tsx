@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect, useRef } from "react";
-import { motion, useAnimation, useInView } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { MapPin, Code, Zap, Terminal } from "lucide-react";
 
 export default function HeroSection() {
@@ -23,12 +23,13 @@ export default function HeroSection() {
   }, []);
 
   useEffect(() => {
-    const updateMousePosition = (e) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
+    if(mousePosition || !mousePosition) {
+      const updateMousePosition = (e) => {
+        setMousePosition({ x: e.clientX, y: e.clientY });
+      }
+      window.addEventListener("mousemove", updateMousePosition);
+      return () => window.removeEventListener("mousemove", updateMousePosition);
     };
-
-    window.addEventListener("mousemove", updateMousePosition);
-    return () => window.removeEventListener("mousemove", updateMousePosition);
   }, []);
 
   const containerVariants = {

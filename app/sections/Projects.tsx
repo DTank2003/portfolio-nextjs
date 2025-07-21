@@ -3,7 +3,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { motion, useAnimation, useInView } from "framer-motion";
 import {
-  ExternalLink,
   Github,
   Play,
   Code2,
@@ -16,7 +15,6 @@ import {
   Shield,
   Smartphone,
   Globe,
-  Star,
   ChevronDown,
 } from "lucide-react";
 
@@ -183,18 +181,6 @@ export default function ProjectsSection() {
       y: 0,
       transition: {
         duration: 0.6,
-        ease: [0.6, -0.05, 0.01, 0.99],
-      },
-    },
-  };
-
-  const cardVariants = {
-    hidden: { opacity: 0, scale: 0.9 },
-    visible: {
-      opacity: 1,
-      scale: 1,
-      transition: {
-        duration: 0.5,
         ease: [0.6, -0.05, 0.01, 0.99],
       },
     },
