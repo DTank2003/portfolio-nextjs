@@ -129,7 +129,7 @@ export default function ContactSection() {
             transition={{ delay: 0.2 }}
             className="text-xl text-gray-300 mb-8"
           >
-            Download my resume and let's create something amazing together
+            Download my resume and let&apos;s create something amazing together
           </motion.p>
         </div>
 

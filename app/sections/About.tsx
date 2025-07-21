@@ -305,9 +305,9 @@ export default function AboutSection() {
                     <strong className="text-white">
                       Associate Software Engineer
                     </strong>{" "}
-                    at DRC Systems Limited in GIFT City, where I've engineered
-                    and deployed 6+ modules for a project management tool,
-                    enhancing efficiency for 500+ users.
+                    at DRC Systems Limited in GIFT City, where I&apos;ve
+                    engineered and deployed 6+ modules for a project management
+                    tool, enhancing efficiency for 500+ users.
                   </p>
                   <p>
                     My journey started with a passion for problem-solving and
@@ -321,11 +321,12 @@ export default function AboutSection() {
                   </p>
                   <p>
                     I believe in the power of technology to solve real-world
-                    problems. Whether it's building scalable web applications or
-                    optimizing performance, I'm always looking for ways to make
-                    a meaningful impact through code.
+                    problems. Whether it&apos;s building scalable web
+                    applications or optimizing performance, I&apos;m always
+                    looking for ways to make a meaningful impact through code.
                   </p>
                 </div>
+
                 <motion.div
                   className="flex items-center space-x-2 text-cyan-400"
                   whileHover={{ x: 10 }}

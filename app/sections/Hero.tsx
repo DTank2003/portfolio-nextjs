@@ -157,7 +157,7 @@ export default function HeroSection() {
                 className="text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold leading-tight"
                 variants={itemVariants}
               >
-                <span className="text-white">Hi, I'm</span>
+                <span className="text-white">Hi, I&apos;m</span>
                 <br />
                 <span className="bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 bg-clip-text text-transparent">
                   Dhyey Tank
