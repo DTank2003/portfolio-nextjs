@@ -1,4 +1,3 @@
-import CustomCursor from "./components/CustomCursor";
 import AboutSection from "./sections/About";
 import ContactSection  from "./sections/Contact";
 import ExperienceSection from "./sections/Experience";
